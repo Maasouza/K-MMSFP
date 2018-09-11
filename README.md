@@ -1,4 +1,4 @@
-#<p align='center'>K-MMSFP - UFRJ 2018</p>
+# <p align='center'>K-MMSFP - UFRJ 2018</p>
 <p align='center'>Algoritmos para resolução do problema mini-max K-rooted spanning forest</p>
 
 Trabalho desenvolvido por: [Marcos Aurélio](https://github.com/Maasouza)<br>
