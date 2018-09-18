@@ -1,7 +1,7 @@
 import numpy as np
 class AG:
 
-    def __init__(self, population, generations, top, bottom, mutationRate, grafo, roots):
+    def __init__(self, population, generations, bornRate, deathRate, mutationRate, grafo, roots):
         self.roots = roots
         self.grafo = grafo
         self.grafo.make_complete()
@@ -23,7 +23,19 @@ class AG:
             self.population.append([person,None,0])
         self.evaluate()
 
+    def resetInstance(self):
+        self.population = []
+        for _ in range(self.initialPop):
+            person = []
+            for i in range(self.grafo.V):
+                person.append(np.random.choice(self.roots))
+            for root in self.roots:
+                person[root] = root
+            self.population.append([person,None,0])
+        self.evaluate()
+
     def evaluate(self):
+        self.prob = []
         self.all_cost = 0
         for idx, person in enumerate(self.population):
             cost = []
@@ -37,8 +49,11 @@ class AG:
                 objFunction = person[1]
             self.population[idx][1] = objFunction
             self.population[idx][2] = 1
+            self.prob.append(objFunction)
             self.all_cost += objFunction
-        self.population = sorted(self.population, key = lambda x:x[1])
+
+        for idx, _ in enumerate(self.prob):
+            self.prob[idx] =  (self.all_cost - self.prob[idx]) / (( len(self.prob)-1)*self.all_cost)
 
     def crossover(self):
         number_of_sons = round(self.initialPop*self.bornRate)
@@ -59,6 +74,7 @@ class AG:
                         idx = np.random.choice(len(pais),p = p)
                         filho.append(pais[idx][0][i])
                 filhos.append([filho,None,0])
+
         deaths = 0
         mean = self.all_cost/len(self.population)
         will_die = []
@@ -92,14 +108,15 @@ class AG:
             p[i] = (cost - p[i])/(n*cost)
         return p
 
+
     def bestSolution(self):
         return sorted(self.population, key = lambda x:x[1])[0]
 
     def run(self):
         t = 0
+        self.resetInstance()
         while t<self.generations:
             t+=1
             self.crossover()
             self.evaluate()
-            mean = self.all_cost/len(self.population)
-            print(t, self.bestSolution(),mean)
+        return self.bestSolution()[1]

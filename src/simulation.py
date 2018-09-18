@@ -444,7 +444,7 @@ class Simulation():
                     currentChanged = True
 
             if currentChanged and self.isBetterSolution(self.currentSolution):
-                print("Itt - ",t," - ", self.currentSolution.objFunction)
+                print("Itt - ",t," - ", temperature ,' - ', self.currentSolution.objFunction)
 
             ret.append(self.bestSolution.objFunction)
             found_time.append(time.time()-start)
